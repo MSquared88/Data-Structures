@@ -26,7 +26,8 @@ class LRUCache:
             return None
         else:
             self.cache.move_to_front(self.storage[key])
-            return self.storage[key].value
+            self.storage[key] = self.cache.head
+            return self.storage[key].value[1]
 
 
     """
@@ -42,28 +43,22 @@ class LRUCache:
     def set(self, key, value):
         if key in self.storage:
             self.cache.delete(self.storage[key])
-            self.cache.add_to_head(value)
+            self.cache.add_to_head((key,value))
+            self.storage[key] = self.cache.head
+            
+        elif self.size == self.limit:
+            lru_item = self.cache.remove_from_tail()
+            self.storage.pop(lru_item[0])
+            self.cache.add_to_head((key,value))
             self.storage[key] = self.cache.head
 
-        elif self.size == self.limit:
-            self.cache.remove_from_tail()
-            self.cache.add_to_head(value)
-            self.storage[key] = self.cache.head
 
         else:
             self.size += 1
-            self.cache.add_to_head(value)
+            self.cache.add_to_head((key,value))
             self.storage[key] = self.cache.head
 
 
-        
 
-new_cache = LRUCache(3)
 
-new_cache.set('item1', 'a')
-new_cache.set('item2', 'b')
-new_cache.set('item3', 'c')
-# new_cache.set('item2', 'z')
-
-print(new_cache.storage)
 
