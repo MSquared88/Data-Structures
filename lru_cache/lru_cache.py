@@ -47,8 +47,8 @@ class LRUCache:
             self.storage[key] = self.cache.head
             
         elif self.size == self.limit:
-            lru_item = self.cache.remove_from_tail()
-            self.storage.pop(lru_item[0])
+            lru_node = self.cache.remove_from_tail()
+            del self.storage[lru_node[0]]
             self.cache.add_to_head((key,value))
             self.storage[key] = self.cache.head
 
